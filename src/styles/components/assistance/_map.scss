@@ -1,0 +1,9 @@
+.map {
+    @include h_w($h: calc(100vh - rem-calc(170)), $w: 100%);
+    transition: all 0.5s ease;
+
+    &.display {
+        width: 80%;
+        transition: all 0.5s ease;
+    }
+}

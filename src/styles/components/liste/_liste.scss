@@ -1,0 +1,21 @@
+.liste_container {
+    .liste {
+        background: $white;
+        margin: rem-calc(20) 0;
+        padding: rem-calc(10) rem-calc(20) rem-calc(30);
+        box-shadow: 0 rem-calc(2) rem-calc(4) rgba(0, 0, 0, 0.1);
+        border-radius: rem-calc(5);
+    }
+
+    @import './modal_display_edit_delete/modal_display_edit_delete';
+}
+
+span.column {
+    display: inline-block;
+    cursor: pointer;
+    background: rgba($color: $black, $alpha: 0.05);
+    padding: rem-calc(5);
+    border-radius: rem-calc(4);
+}
+
+@import './no_filtered_filtered_search';

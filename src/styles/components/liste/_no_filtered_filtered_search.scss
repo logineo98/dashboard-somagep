@@ -1,0 +1,9 @@
+.no_data {
+    width: 100%;
+    @include df(center, center);
+    color: $sb-hover-color;
+    font-weight: 600;
+    padding: rem-calc(50) 0;
+    border: rem-calc(1) solid rgba($color: $black, $alpha: 0.2);
+    text-align: center;
+}
