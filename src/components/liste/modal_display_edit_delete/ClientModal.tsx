@@ -78,6 +78,11 @@ const ClientModal: FC<CLIENT_MODAL_TYPE> = ({ row, seeModalDisplayEditDelete, se
                                     <span className='title'>Statut du compte</span>
                                     <span className='value'> {row?.enabled ? 'Activé' : 'Non activé'} </span>
                                 </div>
+
+                                <div className='information_container'>
+                                    <span className='title'>Quartier</span>
+                                    <span className='value'> {(row?.quarter as { id: string, name: string }).name} </span>
+                                </div>
                             </div>
                         </div>
                     }

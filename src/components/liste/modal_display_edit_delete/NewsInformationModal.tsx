@@ -26,8 +26,10 @@ type NEWS_INFORMATION_MODAL_TYPE = {
 const NewsInformationModal: FC<NEWS_INFORMATION_MODAL_TYPE> = ({ row, seeModalDisplayEditDelete, setSeeModalDisplayEditDelete, title, type }) => {
     const titre = title
     const data: ADD_EDIT_NEWS_INFORMATION_TYPE = { id: '', title: '', content: '', image: '' }
+    const dataInfo: ADD_EDIT_NEWS_INFORMATION_TYPE = { id: '', title: '', content: '', image: '', type: '', diffusionItems: [] }
 
-    const [editNewsInformationData, setEditNewsInformationData] = useState(data)
+    const [editNewsData, setEditNewsData] = useState(data)
+    const [editInfoData, setEditInfoData] = useState(dataInfo)
     const [previewImg, setPreviewImg] = useState<string | File>('')
     const [err, setErr] = useState<ADD_EDIT_NEWS_INFORMATION_TYPE>()
     const [typeCible, setTypeCible] = useState('')
@@ -44,12 +46,12 @@ const NewsInformationModal: FC<NEWS_INFORMATION_MODAL_TYPE> = ({ row, seeModalDi
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        const { error, initialError } = title === 'news' ? validation_news_information(false, editNewsInformationData) : validation_news_information(true, editNewsInformationData)
+        const { error, initialError } = title === 'news' ? validation_news_information(false, editNewsData) : validation_news_information(true, editNewsData)
 
         if (error.content !== initialError.content || error.image !== initialError.image || error.title !== initialError.title) {
             setErr(error)
         } else {
-            const { content, image, title, id } = editNewsInformationData
+            const { content, image, title, id } = editNewsData
             setErr(initialError)
 
             const data = new FormData()
@@ -70,8 +72,14 @@ const NewsInformationModal: FC<NEWS_INFORMATION_MODAL_TYPE> = ({ row, seeModalDi
     }
 
     useEffect(() => {
-        setEditNewsInformationData({ id: row ? row.id : '', title: row ? row.title : '', content: row ? row.content : '', image: row ? row.image : '' })
+        if (title === 'news') {
+            setEditNewsData({ id: row ? row.id : '', title: row ? row.title : '', content: row ? row.content : '', image: row ? row.image : '' })
+        } else if (title === 'information') {
+            setEditInfoData({ id: row ? row.id : '', title: row ? row.title : '', content: row ? row.content : '', image: row ? row.image : '', type: row ? row.type : '', diffusionItems: row ? row.diffusions : '' })
+        }
     }, [row])
+
+    console.log(editInfoData)
 
     useEffect(() => {
         if (typeCible) {
@@ -124,6 +132,22 @@ const NewsInformationModal: FC<NEWS_INFORMATION_MODAL_TYPE> = ({ row, seeModalDi
                                     <span className='value content'> {row?.content} </span>
                                 </div>
 
+                                {title === 'information' &&
+                                    <>
+                                        <div className='information_container'>
+                                            <span className='title'>Type de diffusion</span>
+                                            <span className='value'> {row?.type} </span>
+                                        </div>
+
+                                        {row?.type !== 'Tout le monde' &&
+                                            <div className='information_container'>
+                                                <span className='title'>Zone de diffusion</span>
+                                                <span className='value'> {row?.diffusions?.map((zone, i) => <span key={i}> {zone?.name}, </span>)} </span>
+                                            </div>
+                                        }
+                                    </>
+                                }
+
                                 <div className='information_container'>
                                     <span className='title'>Date de dernière modification</span>
                                     <span className='value'> {displayDate(row?.updatedAt)} </span>
@@ -139,7 +163,7 @@ const NewsInformationModal: FC<NEWS_INFORMATION_MODAL_TYPE> = ({ row, seeModalDi
                                 {previewImg ?
                                     <label htmlFor='image' className='preview_img_container'>
                                         <img src={previewImg as string} alt='image_actualité' />
-                                    </label> : editNewsInformationData.image &&
+                                    </label> : editNewsData.image &&
                                     <label htmlFor='image' className='img_container'>
                                         <img src={`${api_img}/${row?.image}`} alt='image_actualité' />
                                     </label>
@@ -147,22 +171,22 @@ const NewsInformationModal: FC<NEWS_INFORMATION_MODAL_TYPE> = ({ row, seeModalDi
                                 {err?.image && <span className='error'> {err?.image as string} </span>}
                                 <div className='choose_abort_container'>
                                     <label htmlFor='image' className='choose_image'>Choisir une image
-                                        <input type='file' accept='.jpg, .jpeg, .png' name='image' id='image' onChange={e => { setEditNewsInformationData({ ...editNewsInformationData, image: e.target.files ? e.target.files[0] : '' }); if (e.target.files && e.target.files.length !== 0) { setPreviewImg(URL.createObjectURL(e.target.files[0])); } else { setPreviewImg('') } }} />
+                                        <input type='file' accept='.jpg, .jpeg, .png' name='image' id='image' onChange={e => { setEditNewsData({ ...editNewsData, image: e.target.files ? e.target.files[0] : '' }); if (e.target.files && e.target.files.length !== 0) { setPreviewImg(URL.createObjectURL(e.target.files[0])); } else { setPreviewImg('') } }} />
                                     </label>
                                     {previewImg && <span className='abort' onClick={() => setPreviewImg('')}>Retirer</span>}
-                                    {!previewImg && editNewsInformationData.image && <span className='abort' onClick={() => { setEditNewsInformationData({ ...editNewsInformationData, image: '' }) }}>Retirer</span>}
+                                    {!previewImg && editNewsData.image && <span className='abort' onClick={() => { setEditNewsData({ ...editNewsData, image: '' }) }}>Retirer</span>}
                                 </div>
                             </div>
 
                             <div className='input_label_container'>
                                 <label htmlFor='title'>Titre</label>
-                                <input type='text' name='title' id='title' value={editNewsInformationData.title} onChange={e => setEditNewsInformationData({ ...editNewsInformationData, title: e.target.value })} />
+                                <input type='text' name='title' id='title' value={editNewsData.title} onChange={e => setEditNewsData({ ...editNewsData, title: e.target.value })} />
                                 {err?.title && <span className='error'> {err?.title} </span>}
                             </div>
 
                             <div className='textarea_label_container'>
                                 <label htmlFor='content'>Contenu</label>
-                                <textarea name='content' id='content' value={editNewsInformationData.content} onChange={e => setEditNewsInformationData({ ...editNewsInformationData, content: e.target.value })}></textarea>
+                                <textarea name='content' id='content' value={editNewsData.content} onChange={e => setEditNewsData({ ...editNewsData, content: e.target.value })}></textarea>
                                 {err?.content && <span className='error'> {err?.content} </span>}
                             </div>
 
@@ -179,7 +203,7 @@ const NewsInformationModal: FC<NEWS_INFORMATION_MODAL_TYPE> = ({ row, seeModalDi
                                 <label htmlFor='type'>Cible</label>
 
                                 {/* <select name='type' id='type' value={addInformationData.type} onChange={e => { setTypeCible(e.target.value); setAddInformationData({ ...addInformationData, type: e.target.value }) }}> */}
-                                <select name='type' id='type' onChange={e => { setTypeCible(e.target.value); }}>
+                                <select name='type' id='type' value={editInfoData?.type} onChange={e => { setTypeCible(e.target.value); setEditInfoData({ ...editInfoData, type: e.target.value }) }}>
                                     <option value=''>Veuillez sélectionner la cible</option>
                                     <option value='Tout le monde'>Tout le monde</option>
                                     <option value='Ville'>Ville</option>
@@ -191,13 +215,14 @@ const NewsInformationModal: FC<NEWS_INFORMATION_MODAL_TYPE> = ({ row, seeModalDi
                             </div>
 
                             <div className='label_select_multiple_container'>
-                                {typeCible === 'Ville' &&
+                                {editInfoData?.type === 'Ville' &&
                                     <>
                                         <label >Ville</label>
                                         {loadingTown ? <Loading hide_text padding='0px' mg='0px' h_w={30} /> :
                                             <Select
                                                 options={(allTowns?.map((town: { id: string, name: string }) => ({ value: town?.id, label: town?.name })))}
                                                 // onChange={el => { setAddInformationData({ ...addInformationData, diffusionItems: el }) }}
+                                                value={(editInfoData?.diffusionItems as MultiValue<{ diffusion: string, name: string }>)?.map(zone => ({ value: zone.diffusion, label: zone.name }))}
                                                 isMulti
                                                 placeholder='Veuillez sélectionner la(es) villes'
                                                 className='select_multiple'
@@ -208,7 +233,7 @@ const NewsInformationModal: FC<NEWS_INFORMATION_MODAL_TYPE> = ({ row, seeModalDi
                                     </>
                                 }
 
-                                {typeCible === 'Commune' &&
+                                {editInfoData?.type === 'Commune' &&
                                     <>
                                         <label >Commune</label>
 
@@ -216,6 +241,7 @@ const NewsInformationModal: FC<NEWS_INFORMATION_MODAL_TYPE> = ({ row, seeModalDi
                                             <Select
                                                 options={(allCommunes?.map((commune: { id: string, name: string }) => ({ value: commune?.id, label: commune?.name })))}
                                                 // onChange={el => { setAddInformationData({ ...addInformationData, diffusionItems: el }) }}
+                                                value={(editInfoData?.diffusionItems as MultiValue<{ diffusion: string, name: string }>)?.map(zone => ({ value: zone.diffusion, label: zone.name }))}
                                                 isMulti
                                                 placeholder='Veuillez sélectionner la(es) communes'
                                                 className='select_multiple'
@@ -225,7 +251,7 @@ const NewsInformationModal: FC<NEWS_INFORMATION_MODAL_TYPE> = ({ row, seeModalDi
                                     </>
                                 }
 
-                                {typeCible === 'Quartier' &&
+                                {editInfoData?.type === 'Quartier' &&
                                     <>
                                         <label >Quartier</label>
 
@@ -233,6 +259,7 @@ const NewsInformationModal: FC<NEWS_INFORMATION_MODAL_TYPE> = ({ row, seeModalDi
                                             <Select
                                                 options={(allQuaters?.map((commune: { id: string, name: string }) => ({ value: commune?.id, label: commune?.name })))}
                                                 // onChange={el => { setAddInformationData({ ...addInformationData, diffusionItems: el }) }}
+                                                value={(editInfoData?.diffusionItems as MultiValue<{ diffusion: string, name: string }>)?.map(zone => ({ value: zone.diffusion, label: zone.name }))}
                                                 isMulti
                                                 placeholder='Veuillez sélectionner le(es) quartiers'
                                                 className='select_multiple'
@@ -248,7 +275,7 @@ const NewsInformationModal: FC<NEWS_INFORMATION_MODAL_TYPE> = ({ row, seeModalDi
                                 {previewImg ?
                                     <label htmlFor='image' className='preview_img_container'>
                                         <img src={previewImg as string} alt='image_information' />
-                                    </label> : editNewsInformationData.image &&
+                                    </label> : editNewsData.image &&
                                     <label htmlFor='image' className='img_container'>
                                         <img src={`${api_img}/${row?.image}`} alt='image_information' />
                                     </label>
@@ -256,22 +283,22 @@ const NewsInformationModal: FC<NEWS_INFORMATION_MODAL_TYPE> = ({ row, seeModalDi
                                 {err?.image && <span className='error'> {err?.image as string} </span>}
                                 <div className='choose_abort_container'>
                                     <label htmlFor='image' className='choose_image'>Choisir une image
-                                        <input type='file' accept='.jpg, .jpeg, .png' name='image' id='image' onChange={e => { setEditNewsInformationData({ ...editNewsInformationData, image: e.target.files ? e.target.files[0] : '' }); if (e.target.files && e.target.files.length !== 0) { setPreviewImg(URL.createObjectURL(e.target.files[0])); } else { setPreviewImg('') } }} />
+                                        <input type='file' accept='.jpg, .jpeg, .png' name='image' id='image' onChange={e => { setEditNewsData({ ...editNewsData, image: e.target.files ? e.target.files[0] : '' }); if (e.target.files && e.target.files.length !== 0) { setPreviewImg(URL.createObjectURL(e.target.files[0])); } else { setPreviewImg('') } }} />
                                     </label>
                                     {previewImg && <span className='abort' onClick={() => setPreviewImg('')}>Retirer</span>}
-                                    {!previewImg && editNewsInformationData.image && <span className='abort' onClick={() => { setEditNewsInformationData({ ...editNewsInformationData, image: '' }) }}>Retirer</span>}
+                                    {!previewImg && editNewsData.image && <span className='abort' onClick={() => { setEditNewsData({ ...editNewsData, image: '' }) }}>Retirer</span>}
                                 </div>
                             </div>
 
                             <div className='input_label_container'>
                                 <label htmlFor='title'>Titre</label>
-                                <input type='text' name='title' id='title' value={editNewsInformationData.title} onChange={e => setEditNewsInformationData({ ...editNewsInformationData, title: e.target.value })} />
+                                <input type='text' name='title' id='title' value={editNewsData.title} onChange={e => setEditNewsData({ ...editNewsData, title: e.target.value })} />
                                 {err?.title && <span className='error'> {err?.title} </span>}
                             </div>
 
                             <div className='textarea_label_container'>
                                 <label htmlFor='content'>Contenu</label>
-                                <textarea name='content' id='content' value={editNewsInformationData.content} onChange={e => setEditNewsInformationData({ ...editNewsInformationData, content: e.target.value })}></textarea>
+                                <textarea name='content' id='content' value={editNewsData.content} onChange={e => setEditNewsData({ ...editNewsData, content: e.target.value })}></textarea>
                                 {err?.content && <span className='error'> {err?.content} </span>}
                             </div>
 

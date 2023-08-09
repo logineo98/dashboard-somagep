@@ -61,7 +61,7 @@ const AddTown: PAGE_COMPONENT_TYPE = ({ seeAddTown, setSeeAddTown }) => {
 
                         <div className='save_abort'>
                             <button disabled={loadingTown ? true : false} style={{ cursor: loadingTown ? 'not-allowed' : 'pointer' }}>Enregistrer</button>
-                            <button type='reset' className='abort' disabled={loadingTown ? true : false} style={{ cursor: loadingTown ? 'not-allowed' : 'pointer' }} onClick={() => { setSeeAddTown && setSeeAddTown(false); setErr(data) }}>Annuler</button>
+                            <button type='reset' className='abort' disabled={loadingTown ? true : false} style={{ cursor: loadingTown ? 'not-allowed' : 'pointer' }} onClick={() => { setSeeAddTown && setSeeAddTown(false); setAddTownData(data); setErr(data) }}>Annuler</button>
                         </div>
                     </form>
                 </div>

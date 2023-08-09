@@ -85,7 +85,7 @@ const AddQuarter: PAGE_COMPONENT_TYPE = ({ seeQuarter, setSeeQuarter }) => {
 
                         <div className='save_abort'>
                             <button disabled={loadingQuarter ? true : false} style={{ cursor: loadingQuarter ? 'not-allowed' : 'pointer' }}>Enregistrer</button>
-                            <button type='reset' className='abort' disabled={loadingQuarter ? true : false} style={{ cursor: loadingQuarter ? 'not-allowed' : 'pointer' }} onClick={() => { setSeeQuarter && setSeeQuarter(false); setErr(data) }}>Annuler</button>
+                            <button type='reset' className='abort' disabled={loadingQuarter ? true : false} style={{ cursor: loadingQuarter ? 'not-allowed' : 'pointer' }} onClick={() => { setSeeQuarter && setSeeQuarter(false); setAddQuarterData(data); setErr(data) }}>Annuler</button>
                         </div>
                     </form>
 

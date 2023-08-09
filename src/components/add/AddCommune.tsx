@@ -85,7 +85,7 @@ const AddCommune: PAGE_COMPONENT_TYPE = ({ seeCommune, setSeeCommune }) => {
 
                         <div className='save_abort'>
                             <button disabled={loadingCommune ? true : false} style={{ cursor: loadingCommune ? 'not-allowed' : 'pointer' }}>Enregistrer</button>
-                            <button type='reset' className='abort' disabled={loadingCommune ? true : false} style={{ cursor: loadingCommune ? 'not-allowed' : 'pointer' }} onClick={() => { setSeeCommune && setSeeCommune(false); setErr(data) }}>Annuler</button>
+                            <button type='reset' className='abort' disabled={loadingCommune ? true : false} style={{ cursor: loadingCommune ? 'not-allowed' : 'pointer' }} onClick={() => { setSeeCommune && setSeeCommune(false); setAddCommuneData(data); setErr(data) }}>Annuler</button>
                         </div>
                     </form>
 

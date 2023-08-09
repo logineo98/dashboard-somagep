@@ -17,7 +17,7 @@
 
     .display_edit_delete_modal_container {
         background: $white;
-        @include h-w($w: rem-calc(512));
+        @include h-w($w: rem-calc(512), );
         max-height: 98%;
         border-radius: rem-calc(15);
         padding: 2%;

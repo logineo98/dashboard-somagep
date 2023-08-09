@@ -30,7 +30,7 @@ const FacturePostPayAndPrePayModal: FC<FACTURE_POST_PAY_AND_PRE_PAY_MODAL_TYPE> 
                     <div className='icon_name'>
                         <div className='icon_name_container'>
                             <FaUserCircle className='icon' />
-                            <p> {title === 'post_pay' ? 'FACTURE POST-PAID' : 'FACTURE PRÉ-PAYÉ'} </p>
+                            <p> FACTURE </p>
                         </div>
                     </div>
 
@@ -39,7 +39,7 @@ const FacturePostPayAndPrePayModal: FC<FACTURE_POST_PAY_AND_PRE_PAY_MODAL_TYPE> 
                             <div className='container'>
                                 <div className='information_container'>
                                     <span className='title'>Propriétaire compteur</span>
-                                    <span className='value'> {row?.owner?.length < 23 ? row?.owner : row?.owner?.substring(0, 23) + '...'} </span>
+                                    <span className='value'> {row?.owner?.length < 20 ? row?.owner : row?.owner?.substring(0, 20) + '...'} </span>
                                 </div>
 
                                 <div className='information_container'>

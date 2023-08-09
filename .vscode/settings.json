@@ -9,12 +9,14 @@
         "node_modules": true,
         ".vscode": true,
         "src/.vscode": true,
-        "public": true
+        "public": true,
+        "backup": true
     },
     "hide-files.files": [
         "node_modules",
         ".vscode",
         "src/.vscode",
-        "public"
+        "public",
+        "backup"
     ]
 }

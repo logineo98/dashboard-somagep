@@ -70,6 +70,8 @@ const AddNewsInformation: PAGE_COMPONENT_TYPE = ({ title, seeAddNewsInformation,
                 ))
             }
         }
+
+        console.log(addInformationData)
     }
 
     useEffect(() => {
@@ -154,7 +156,7 @@ const AddNewsInformation: PAGE_COMPONENT_TYPE = ({ title, seeAddNewsInformation,
                             </div>
 
                             <div className='label_select_multiple_container'>
-                                {typeCible === 'Ville' &&
+                                {addInformationData.type === 'Ville' &&
                                     <>
                                         <label >Ville</label>
                                         {loadingTown ? <Loading hide_text padding='0px' mg='0px' h_w={30} /> :
@@ -172,7 +174,7 @@ const AddNewsInformation: PAGE_COMPONENT_TYPE = ({ title, seeAddNewsInformation,
                                     </>
                                 }
 
-                                {typeCible === 'Commune' &&
+                                {addInformationData.type === 'Commune' &&
                                     <>
                                         <label >Commune</label>
 
@@ -186,10 +188,11 @@ const AddNewsInformation: PAGE_COMPONENT_TYPE = ({ title, seeAddNewsInformation,
                                                 noOptionsMessage={() => (<span>Aucune autre option</span>)}
                                             />
                                         }
+                                        {err?.diffusionItems && <span className='error'> {err?.diffusionItems as string} </span>}
                                     </>
                                 }
 
-                                {typeCible === 'Quartier' &&
+                                {addInformationData.type === 'Quartier' &&
                                     <>
                                         <label >Quartier</label>
 
@@ -203,6 +206,7 @@ const AddNewsInformation: PAGE_COMPONENT_TYPE = ({ title, seeAddNewsInformation,
                                                 noOptionsMessage={() => (<span>Aucune autre option</span>)}
                                             />
                                         }
+                                        {err?.diffusionItems && <span className='error'> {err?.diffusionItems as string} </span>}
                                     </>
                                 }
                             </div>
@@ -237,7 +241,7 @@ const AddNewsInformation: PAGE_COMPONENT_TYPE = ({ title, seeAddNewsInformation,
 
                             <div className='save_abort'>
                                 <button disabled={loadingInfo ? true : false} style={{ cursor: loadingInfo ? 'not-allowed' : 'pointer' }}>Enregistrer</button>
-                                <button type='reset' className='abort' disabled={loadingInfo ? true : false} style={{ cursor: loadingInfo ? 'not-allowed' : 'pointer' }} onClick={() => { setSeeAddNewsInformation && setSeeAddNewsInformation(false); setPreviewImg(''); setErr(dataInfo) }}>Annuler</button>
+                                <button type='reset' className='abort' disabled={loadingInfo ? true : false} style={{ cursor: loadingInfo ? 'not-allowed' : 'pointer' }} onClick={() => { setSeeAddNewsInformation && setSeeAddNewsInformation(false); setPreviewImg(''); setAddNewsData(data); setAddInformationData(dataInfo); setErr(dataInfo) }}>Annuler</button>
                             </div>
                         </form>
                     }
